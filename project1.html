@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Match Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+            transition: background-color 0.3s;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: white;
+        }
+        button:hover {
+            background-color: #222;
+        }
+        #reqcolor {
+            display: inline-block;
+            height: 60px;
+            width: 120px;
+            border-radius: 10px;
+            margin-top: 20px;
+            line-height: 60px;
+            font-weight: bold;
+            color: white;
+            font-size: 1em;
+        }
+        .difficulty {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 Color Match Game</h1>
+    <div class="difficulty">
+        <button onclick="setDifficulty(1000)">Easy</button>
+        <button onclick="setDifficulty(500)">Medium</button>
+        <button onclick="setDifficulty(100)">Hard</button>
+    </div>
+    <button id="start">Start</button>
+    <button id="end">End</button>
+    <div id="reqcolor">Target Color</div>
+
+    <script>
+        const ran = () => {
+            const hex = '0123456789ABCDEF';
+            let x = '#';
+            for (let i = 0; i < 6; i++) {
+                x += hex[Math.floor(Math.random() * 16)];
+            }
+            return x;
+        }
+
+        let inte = null;
+        let targetColor = null;
+        let intervalTime = 1000;
+
+        function setDifficulty(ms) {
+            intervalTime = ms;
+            alert(`Difficulty set to ${ms === 1000 ? "Easy" : ms === 500 ? "Medium" : "Hard"}`);
+        }
+
+        function startc() {
+            targetColor = ran();
+            document.getElementById('reqcolor').style.backgroundColor = targetColor;
+
+            const clo = () => {
+                let randomChance = Math.floor(Math.random() * 20);
+                if (randomChance === 0) {
+                    document.body.style.backgroundColor = targetColor;
+                } else {
+                    document.body.style.backgroundColor = ran();
+                }
+            }
+
+            if (inte === null) {
+                inte = setInterval(clo, intervalTime);
+            }
+        }
+
+        function stopc() {
+            clearInterval(inte);
+            inte = null;
+
+            const currentBg = window.getComputedStyle(document.body).backgroundColor;
+            const targetBg = window.getComputedStyle(document.getElementById('reqcolor')).backgroundColor;
+
+            if (currentBg === targetBg) {
+                alert("✅ Matched! You Win!");
+            } else {
+                alert("❌ Not matched. Try again.");
+            }
+        }
+
+        document.getElementById('start').addEventListener('click', startc);
+        document.getElementById('end').addEventListener('click', stopc);
+    </script>
+</body>
+</html>
